@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
-import 'package:chamcong/widget/icon_button_back.dart';
+import 'package:chamcong/core/widget/icon_button_back.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -17,10 +17,15 @@ class _SelectAuthState extends State<SelectAuth> {
   ValueNotifier<bool> isRegister = ValueNotifier(false);
 
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
     isRegister.value = arguments['isRegister'];
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,

@@ -11,6 +11,8 @@ class InputOnchange extends StatefulWidget {
   final IconData iconLabel;
   final bool isTitle;
   final TextEditingController? valueInput;
+  final GlobalKey<FormState>? formKey;
+
   const InputOnchange(
       {super.key,
       this.placeholder,
@@ -18,6 +20,7 @@ class InputOnchange extends StatefulWidget {
       this.title,
       this.lines,
       this.type,
+      this.formKey,
       required this.iconLabel,
       required this.isTitle,
       this.valueInput});
@@ -30,19 +33,49 @@ class _InputOnchangeState extends State<InputOnchange> {
   bool _isShowPassWord = true;
   bool _obscuraText = true;
 
+  bool validateUsername(String value) {
+    Pattern pattern = r'^(?:\d{8,12}|\w+@\w+\.\w+)$';
+    RegExp regex = RegExp(pattern as String);
+    return !regex.hasMatch(value);
+  }
+
+  bool validatePassword(String value) {
+    Pattern pattern = r'^(?=.*[a-zA-Z])(?=.*\d)[a-zA-Z\d]{6,}$';
+    RegExp regex = RegExp(pattern as String);
+    return !regex.hasMatch(value);
+  }
+
+  bool validateNumber(String value) {
+    Pattern pattern = r'^\d+(\.\d+)?$';
+    RegExp regex = RegExp(pattern as String);
+    return !regex.hasMatch(value);
+  }
+
   String? validate(String value) {
     switch (widget.type) {
-      case 'username':
-        Pattern pattern = r'^\d+(?:\.\d+)?$';
-        RegExp regex = RegExp(pattern.toString());
-        if (!regex.hasMatch(value)) {
-          return 'Số điện thoại không chứa ký tự đặc biệt';
+      case 'account':
+        if (validateUsername(value)) {
+          return 'Vui lòng nhập email hoặc số điện thoại hợp lệ';
         }
       case 'company':
-        Pattern pattern = r'/^[a-zA-Z0-9]*$/';
-        RegExp regex = RegExp(pattern.toString());
-        if (!regex.hasMatch(value)) {
+        if (value.isEmpty) {
           return 'Vui lòng nhập tên công ty';
+        }
+      case 'phone':
+        if (validateNumber(value)) {
+          return 'Số điện thoại không đúng định dạng';
+        }
+      case 'password':
+        if (validatePassword(value)) {
+          return 'Mật khẩu phải bao gồm 6 ký tự gồm ít nhất một chữ và một số';
+        }
+      case 'reEnterPassword':
+        if (value != '') {
+          return 'Xác nhận lại mật khẩu không trùng khớp';
+        }
+      case 'address':
+        if (value.isEmpty) {
+          return 'Vui lòng nhập địa chỉ';
         }
       default:
         null;
@@ -70,13 +103,25 @@ class _InputOnchangeState extends State<InputOnchange> {
                       ),
                       const Text(
                         '*',
-                        style: TextStyle(color: Colors.red, fontSize: 18),
+                        style: TextStyle(color: AppColors.error, fontSize: 18),
                       )
                     ],
                   ),
                 )
               : Container(),
           TextFormField(
+            onChanged: (value) {
+              if (widget.formKey?.currentState != null) {
+                widget.formKey!.currentState!.validate();
+              }
+            },
+            validator: (value) {
+              if (widget.valueInput?.value.text.isNotEmpty != null) {
+                return validate(widget.valueInput!.value.text);
+              } else {
+                return null;
+              }
+            },
             controller: widget.valueInput,
             maxLines: widget.lines ?? 1,
             obscureText:
@@ -84,9 +129,6 @@ class _InputOnchangeState extends State<InputOnchange> {
             style:
                 const TextStyle(fontSize: 16, overflow: TextOverflow.ellipsis),
             decoration: InputDecoration(
-                errorText: widget.valueInput?.text.isNotEmpty ?? false
-                    ? validate(widget.valueInput!.value.text)
-                    : null,
                 suffixIcon: widget.isPassword ?? false
                     ? GestureDetector(
                         onTap: () {

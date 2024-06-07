@@ -2,11 +2,11 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
+import 'package:chamcong/core/widget/button_login.dart';
+import 'package:chamcong/core/widget/button_navigator.dart';
+import 'package:chamcong/core/widget/icon_button_back.dart';
+import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
 import 'package:chamcong/modules/auth/login/screen/border_painter.dart';
-import 'package:chamcong/widget/button_login.dart';
-import 'package:chamcong/widget/button_navigator.dart';
-import 'package:chamcong/widget/icon_button_back.dart';
-import 'package:chamcong/widget/input_onchange.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,13 +18,24 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isPhoneEmail = true;
+  bool isCompany = false;
+  final _formKey = GlobalKey<FormState>();
+
+  Map<String, TextEditingController> mapControllers = {
+    'account': TextEditingController(),
+    'password': TextEditingController(),
+  };
+
+  @override
+  void didChangeDependencies() {
+    final arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    isCompany = arguments['isCompany'];
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    bool isCompany = arguments['isCompany'];
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -81,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
               where: '/select-auth',
               titleArguments: 'isRegister',
               boolArguments: false,
-            )
+            ),
           ],
         ),
       ),
@@ -126,53 +137,65 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget screenPhoneEmail(bool isCompany) {
     return Flexible(
       flex: 45,
-      child: Column(
-        children: [
-          Expanded(
-            flex: 60,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const InputOnchange(
-                  iconLabel: Icons.person,
-                  placeholder: 'Nhập số điện thoại/ email',
-                  isTitle: false,
-                ),
-                const InputOnchange(
-                  iconLabel: Icons.lock,
-                  placeholder: 'Nhập mật khẩu',
-                  isPassword: true,
-                  isTitle: false,
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, '/forgot-password',
-                      arguments: {'isCompany': isCompany}),
-                  child: const Text('Quên mật khẩu?',
-                      style: TextStyles.text16w500UnderItaPrimary),
-                ),
-              ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            Expanded(
+              flex: 60,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  InputOnchange(
+                    iconLabel: Icons.person,
+                    placeholder: 'Nhập số điện thoại/ email',
+                    isTitle: false,
+                    valueInput: mapControllers['account'],
+                  ),
+                  InputOnchange(
+                    iconLabel: Icons.lock,
+                    placeholder: 'Nhập mật khẩu',
+                    isPassword: true,
+                    isTitle: false,
+                    valueInput: mapControllers['password'],
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(
+                        context, '/forgot-password',
+                        arguments: {'isCompany': isCompany}),
+                    child: const Text('Quên mật khẩu?',
+                        style: TextStyles.text16w500UnderItaPrimary),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Spacer(
-            flex: 5,
-          ),
-          Expanded(
-            flex: 35,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const ButtonLogin(textBtn: 'Đăng nhập'),
-                ButtonNavigator(
-                    question: 'Bạn chưa có tài khoản?',
-                    pushNamed: '/register',
-                    titleArguments: 'isCompany',
-                    boolArguments: isCompany ? true : false,
-                    where: 'Đăng ký')
-              ],
+            const Spacer(
+              flex: 5,
             ),
-          ),
-        ],
+            Expanded(
+              flex: 35,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ButtonLogin(
+                    mapControllers: mapControllers,
+                    formKey: _formKey,
+                    textBtn: 'Đăng nhập',
+                    submitRegister: false,
+                    type: isCompany ? 1 : 2,
+                  ),
+                  ButtonNavigator(
+                      question: 'Bạn chưa có tài khoản?',
+                      pushNamed: '/register',
+                      titleArguments: 'isCompany',
+                      boolArguments: isCompany ? true : false,
+                      where: 'Đăng ký')
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
