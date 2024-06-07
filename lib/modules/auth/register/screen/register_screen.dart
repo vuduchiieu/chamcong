@@ -1,6 +1,6 @@
+import 'package:chamcong/core/widget/icon_button_back.dart';
 import 'package:chamcong/modules/auth/register/screen/company_screen.dart';
 import 'package:chamcong/modules/auth/register/screen/staff_screen.dart';
-import 'package:chamcong/widget/icon_button_back.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -11,12 +11,18 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  bool isCompany = false;
+
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
-    bool isCompany = arguments['isCompany'];
+    isCompany = arguments['isCompany'];
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(

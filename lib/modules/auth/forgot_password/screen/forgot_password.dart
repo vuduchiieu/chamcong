@@ -1,8 +1,8 @@
 import 'package:chamcong/core/theme/text_style.dart';
-import 'package:chamcong/widget/button_login.dart';
-import 'package:chamcong/widget/button_navigator.dart';
-import 'package:chamcong/widget/icon_button_back.dart';
-import 'package:chamcong/widget/input_onchange.dart';
+import 'package:chamcong/core/widget/button_login.dart';
+import 'package:chamcong/core/widget/button_navigator.dart';
+import 'package:chamcong/core/widget/icon_button_back.dart';
+import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -13,12 +13,18 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
+  bool isCompany = false;
+
   @override
-  Widget build(BuildContext context) {
+  void didChangeDependencies() {
     final arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
-    bool isCompany = arguments['isCompany'];
+    isCompany = arguments['isCompany'];
+    super.didChangeDependencies();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -67,7 +73,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             title: 'Tài khoản đăng nhập',
                             placeholder: 'Nhập số điện thoại/ email',
                           ),
-                          const ButtonLogin(textBtn: 'Nhập mã xác thực'),
+                          const ButtonLogin(
+                              textBtn: 'Nhập mã xác thực',
+                              submitRegister: null),
                           ButtonNavigator(
                               question: 'Bạn chưa có tài khoản?',
                               pushNamed: '/register',

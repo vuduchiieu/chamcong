@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
-import 'package:chamcong/widget/button_navigator.dart';
+import 'package:chamcong/core/widget/button_navigator.dart';
 import 'package:flutter/material.dart';
 
 class StaffScreen extends StatefulWidget {

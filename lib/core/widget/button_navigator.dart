@@ -2,11 +2,11 @@ import 'package:chamcong/core/theme/text_style.dart';
 import 'package:flutter/material.dart';
 
 class ButtonNavigator extends StatefulWidget {
-  final String question;
-  final String pushNamed;
-  final String titleArguments;
-  final bool boolArguments;
-  final String where;
+  final String question; //câu hỏi ở tiêu đề
+  final String pushNamed; // đi đâu
+  final String titleArguments; // tiêu để của arguments
+  final bool boolArguments; //value của arguments
+  final String where; //đi đâu ở tiêu đề
 
   const ButtonNavigator(
       {super.key,

@@ -2,9 +2,9 @@ import 'package:chamcong/core/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class IconButtonBack extends StatelessWidget {
-  final String where;
-  final String? titleArguments;
-  final bool? boolArguments;
+  final String where; // đi đâu
+  final String? titleArguments; // key của arguments
+  final bool? boolArguments; // value của arguments
   const IconButtonBack(
       {super.key,
       required this.where,
