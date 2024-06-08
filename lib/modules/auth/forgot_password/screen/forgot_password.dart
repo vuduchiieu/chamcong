@@ -1,7 +1,7 @@
 import 'package:chamcong/core/theme/text_style.dart';
-import 'package:chamcong/core/widget/button_login.dart';
+import 'package:chamcong/core/widget/button_auth.dart';
 import 'package:chamcong/core/widget/button_navigator.dart';
-import 'package:chamcong/core/widget/icon_button_back.dart';
+import 'package:chamcong/core/widget/button_icon_back.dart';
 import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
 import 'package:flutter/material.dart';
 
@@ -67,13 +67,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const InputOnchange(
+                          InputOnchange(
                             iconLabel: Icons.person,
                             isTitle: true,
                             title: 'Tài khoản đăng nhập',
                             placeholder: 'Nhập số điện thoại/ email',
                           ),
-                          const ButtonLogin(
+                          const ButtonAuth(
                               textBtn: 'Nhập mã xác thực',
                               submitRegister: null),
                           ButtonNavigator(
@@ -90,7 +90,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
             ),
           ),
-          IconButtonBack(
+          ButtonIconBack(
             where: '/login',
             titleArguments: 'isCompany',
             boolArguments: isCompany,

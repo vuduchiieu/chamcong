@@ -7,6 +7,8 @@ class AssetPath {
   static const String introNd = '${_img}intro_nd.png';
   static const String introRd = '${_img}intro_rd.png';
   static const String logoNonText = '${_img}logo_non_text.png';
+  static const String bgrLon = '${_img}bgr_lon.png';
+  static const String threeIcRegister = '${_img}three_ic_register.png';
 
   //icon
   static const String dot = '${_icon}dot.svg';

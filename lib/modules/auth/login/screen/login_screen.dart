@@ -2,9 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
-import 'package:chamcong/core/widget/button_login.dart';
+import 'package:chamcong/core/widget/button_auth.dart';
 import 'package:chamcong/core/widget/button_navigator.dart';
-import 'package:chamcong/core/widget/icon_button_back.dart';
+import 'package:chamcong/core/widget/button_icon_back.dart';
 import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
 import 'package:chamcong/modules/auth/login/screen/border_painter.dart';
 import 'package:flutter/material.dart';
@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            const IconButtonBack(
+            const ButtonIconBack(
               where: '/select-auth',
               titleArguments: 'isRegister',
               boolArguments: false,
@@ -178,7 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ButtonLogin(
+                  ButtonAuth(
                     mapControllers: mapControllers,
                     formKey: _formKey,
                     textBtn: 'Đăng nhập',

@@ -8,6 +8,7 @@ class InputOnchange extends StatefulWidget {
   final String? title;
   final int? lines;
   final String? type;
+  final TextEditingController? valuepassword;
   final IconData iconLabel;
   final bool isTitle;
   final TextEditingController? valueInput;
@@ -20,6 +21,7 @@ class InputOnchange extends StatefulWidget {
       this.title,
       this.lines,
       this.type,
+      this.valuepassword,
       this.formKey,
       required this.iconLabel,
       required this.isTitle,
@@ -70,7 +72,8 @@ class _InputOnchangeState extends State<InputOnchange> {
           return 'Mật khẩu phải bao gồm 6 ký tự gồm ít nhất một chữ và một số';
         }
       case 'reEnterPassword':
-        if (value != '') {
+        if (widget.valuepassword?.value.text != null &&
+            widget.valuepassword!.value.text != value) {
           return 'Xác nhận lại mật khẩu không trùng khớp';
         }
       case 'address':
