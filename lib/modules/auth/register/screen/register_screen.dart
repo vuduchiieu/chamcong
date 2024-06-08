@@ -1,4 +1,4 @@
-import 'package:chamcong/core/widget/icon_button_back.dart';
+import 'package:chamcong/core/widget/button_icon_back.dart';
 import 'package:chamcong/modules/auth/register/screen/company_screen.dart';
 import 'package:chamcong/modules/auth/register/screen/staff_screen.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               isCompany
                   ? CompanyScreen(isCompany: isCompany)
                   : StaffScreen(isCompany: isCompany),
-              const IconButtonBack(
+              const ButtonIconBack(
                 where: '/select-auth',
                 titleArguments: 'isRegister',
                 boolArguments: true,

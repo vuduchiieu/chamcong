@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 
-class ButtonLogin extends StatefulWidget {
+class ButtonAuth extends StatefulWidget {
   final String? src; // điều hướng
   final String textBtn; // tên của nút
   final bool? isRegister; // check ấn vào đăng nhập hay đăng màn thứ 2
@@ -18,7 +18,7 @@ class ButtonLogin extends StatefulWidget {
 
   final GlobalKey<FormState>? formKey;
 
-  const ButtonLogin({
+  const ButtonAuth({
     super.key,
     this.src,
     this.formKey,
@@ -30,11 +30,69 @@ class ButtonLogin extends StatefulWidget {
   });
 
   @override
-  State<ButtonLogin> createState() => _ButtonLoginState();
+  State<ButtonAuth> createState() => _ButtonAuthState();
+}
+
+Future<void> handleRegister({
+  required formKey,
+  required ButtonAuth widget,
+  required BuildContext context,
+}) async {
+  if (formKey.currentState.validate()) {
+    // điều hướng(cho ra ngoài đỡ báo xanh)
+    handleNavigation({required String url}) {
+      Navigator.pushNamed(context, url);
+    }
+
+    String account = widget.mapControllers?['account'] != null
+        ? widget.mapControllers!['account']!.text
+        : '';
+    String password = widget.mapControllers?['reEnterPassword'] != null
+        ? widget.mapControllers!['reEnterPassword']!.text
+        : '';
+    String companyName = widget.mapControllers?['companyName'] != null
+        ? widget.mapControllers!['companyName']!.text
+        : '';
+    String phone = widget.mapControllers?['phone'] != null
+        ? widget.mapControllers!['phone']!.text
+        : '';
+    String address = widget.mapControllers?['address'] != null
+        ? widget.mapControllers!['address']!.text
+        : '';
+
+    final fetData = await http.post(Uri.parse(Api.apiRegisterCompany),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'account': account,
+          'password': password,
+          'userName': companyName,
+          'phone': phone,
+          'address': address,
+        }));
+
+    final response = jsonDecode(fetData.body);
+
+    if (fetData.statusCode == 200) {
+    } else {
+      //Be trả về lỗi thì hiển thị message lên giao diện người dùng
+      handleNavigation(url: '/authentication-otp');
+
+      Fluttertoast.showToast(
+          msg: response['error']['message'] ?? "Lỗi không xác định",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 2,
+          backgroundColor: AppColors.error,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
 }
 
 Future<void> handleLogin({
-  required ButtonLogin widget,
+  required ButtonAuth widget,
   required BuildContext context,
 }) async {
   String account = widget.mapControllers?['account'] != null
@@ -165,16 +223,7 @@ Future<void> handleLogin({
   }
 }
 
-Future<void> handleRegister({formKey}) async {
-  try {
-    if (formKey.currentState.validate()) {}
-  } catch (e) {
-    // ignore: avoid_print
-    print('Lỗi: $e');
-  }
-}
-
-class _ButtonLoginState extends State<ButtonLogin> {
+class _ButtonAuthState extends State<ButtonAuth> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -191,7 +240,8 @@ class _ButtonLoginState extends State<ButtonLogin> {
             return;
           }
           if (widget.submitRegister!) {
-            handleRegister(formKey: widget.formKey);
+            handleRegister(
+                formKey: widget.formKey, context: context, widget: widget);
           } else {
             handleLogin(context: context, widget: widget);
           }

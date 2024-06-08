@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/text_style.dart';
-import 'package:chamcong/core/widget/button_login.dart';
+import 'package:chamcong/core/widget/button_auth.dart';
 import 'package:chamcong/core/widget/button_navigator.dart';
 import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
 
@@ -95,6 +95,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                     placeholder: 'Nhập lại mật khẩu',
                     isPassword: true,
                     valueInput: mapControllers['reEnterPassword'],
+                    valuepassword: mapControllers['password'],
                     type: 'reEnterPassword',
                     formKey: _formKey,
                   ),
@@ -116,7 +117,8 @@ class _CompanyScreenState extends State<CompanyScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
             child: Column(
               children: [
-                ButtonLogin(
+                ButtonAuth(
+                  mapControllers: mapControllers,
                   formKey: _formKey,
                   textBtn: 'Tiếp tục',
                   submitRegister: true,
