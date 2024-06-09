@@ -6,8 +6,8 @@ import 'package:chamcong/core/widget/button_navigator.dart';
 import 'package:flutter/material.dart';
 
 class StaffScreen extends StatefulWidget {
-  final bool? isCompany;
-  const StaffScreen({super.key, this.isCompany});
+  final bool isCompany;
+  const StaffScreen({super.key, required this.isCompany});
 
   @override
   State<StaffScreen> createState() => _StaffScreenState();
@@ -53,8 +53,7 @@ class _StaffScreenState extends State<StaffScreen> {
                   child: ButtonNavigator(
                       question: 'Bạn đã có tài khoản?',
                       pushNamed: '/login',
-                      titleArguments: 'isCompany',
-                      boolArguments: widget.isCompany ?? false ? true : false,
+                      arguments: widget.isCompany ? true : false,
                       where: 'Đăng nhập'))
             ],
           ),

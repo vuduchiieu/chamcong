@@ -1,12 +1,11 @@
-import 'dart:convert';
-import 'package:chamcong/core/api/api.dart';
+import 'package:chamcong/core/constants/handle_api.dart';
+import 'package:chamcong/core/constants/show_dia_log.dart';
 import 'package:chamcong/core/models/info_user_staff.dart';
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
 import 'package:chamcong/core/models/info_user_company.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:http/http.dart' as http;
+import 'package:go_router/go_router.dart';
 
 class ButtonAuth extends StatefulWidget {
   final String? src; // điều hướng
@@ -39,11 +38,6 @@ Future<void> handleRegister({
   required BuildContext context,
 }) async {
   if (formKey.currentState.validate()) {
-    // điều hướng(cho ra ngoài đỡ báo xanh)
-    handleNavigation({required String url}) {
-      Navigator.pushNamed(context, url);
-    }
-
     String account = widget.mapControllers?['account'] != null
         ? widget.mapControllers!['account']!.text
         : '';
@@ -60,63 +54,69 @@ Future<void> handleRegister({
         ? widget.mapControllers!['address']!.text
         : '';
 
-    final fetData = await http.post(Uri.parse(Api.apiRegisterCompany),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(<String, dynamic>{
-          'account': account,
-          'password': password,
-          'userName': companyName,
-          'phone': phone,
-          'address': address,
-        }));
-
-    final response = jsonDecode(fetData.body);
-
-    if (fetData.statusCode == 200) {
-    } else {
-      //Be trả về lỗi thì hiển thị message lên giao diện người dùng
-      handleNavigation(url: '/authentication-otp');
-
-      Fluttertoast.showToast(
-          msg: response['error']['message'] ?? "Lỗi không xác định",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 2,
-          backgroundColor: AppColors.error,
-          textColor: Colors.white,
-          fontSize: 16.0);
+// điều huwongs
+    Future handleNavigation({
+      required String url,
+    }) async {
+      await context.push(url, extra: {'type': widget.type, 'account': account});
     }
+
+    final response = await handlePostApi(body: {
+      // 'account': account,
+      'password': password,
+      'userName': companyName,
+      'phone': phone,
+      'address': address,
+    });
+
+    if (response != null) {
+      await handleNavigation(
+        url: '/authentication-otp',
+      ); // chờ xử lý trang otp
+      if (!context.mounted) return;
+      //gọi hàm đăng nhập
+      handleLogin(
+          widget: widget,
+          context: context,
+          callByRegister: true,
+          accountValue: account,
+          passwordValue: password);
+    }
+    ;
   }
 }
 
 Future<void> handleLogin({
   required ButtonAuth widget,
   required BuildContext context,
+  bool? callByRegister,
+  String? accountValue,
+  String? passwordValue,
 }) async {
-  String account = widget.mapControllers?['account'] != null
-      ? widget.mapControllers!['account']!.text
-      : '';
-  String password = widget.mapControllers?['password'] != null
-      ? widget.mapControllers!['password']!.text
-      : '';
+  String account;
+  String password;
 
-  final fetData = await http.post(Uri.parse(Api.apiLogin),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'account': account,
-        'password': password,
-        'type': widget.type,
-      }));
+  if (callByRegister != null && callByRegister == true) {
+    account = accountValue ?? '';
+    password = passwordValue ?? '';
+  } else {
+    account = widget.mapControllers?['account'] != null
+        ? widget.mapControllers!['account']!.text
+        : '';
+    password = widget.mapControllers?['password'] != null
+        ? widget.mapControllers!['password']!.text
+        : '';
+  }
 
-  final response = jsonDecode(fetData.body);
+  final response = await handlePostApi(body: {
+    'account': account,
+    'password': password,
+    'type': widget.type,
+  });
 
   // điều hướng(cho ra ngoài đỡ báo xanh)
   void handleNavigation({required String url, required infoUser}) {
-    Navigator.pushNamed(context, url, arguments: {'infoUser': infoUser});
+    context.push(url, extra: infoUser);
   }
 
   // lấy thông tin người dùng gán vào đối tượng rồi điều hướng
@@ -135,91 +135,27 @@ Future<void> handleLogin({
 
   // check xem có đi lạc không
   void checkIsCompany(data) {
+    if (callByRegister != null) {
+      // như tên, nếu gọi bằng hàm đăng ký thì không cần check đi lạc
+      handleFetDataUser(
+          response: data as Map<String, dynamic>, type: data['type']);
+      return;
+    }
     if (widget.type != data['type']) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            actionsPadding:
-                const EdgeInsets.only(top: 18, right: 16, bottom: 26),
-            contentPadding:
-                const EdgeInsets.only(top: 30, bottom: 10, left: 20, right: 20),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(22))),
-            content: RichText(
-              textAlign: TextAlign.center,
-              text:
-                  TextSpan(style: TextStyles.text16w4Gray, children: <TextSpan>[
-                const TextSpan(
-                  text: 'Tài khoản bạn đang đăng nhập là tài khoản ',
-                ),
-                TextSpan(
-                  text: "${widget.type == 1 ? 'công ty' : 'nhân viên'}. ",
-                  style: TextStyles.text16w500Primary,
-                ),
-                const TextSpan(
-                  text:
-                      'Bạn có muốn tiếp tục đăng nhập với loại tài khoản này?',
-                )
-              ]),
-            ),
-            actions: <Widget>[
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(999)),
-                child: GestureDetector(
-                  child: const Text(
-                    'Quay lại',
-                    style: TextStyles.text16w7white,
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                decoration: BoxDecoration(
-                    color: AppColors.error,
-                    borderRadius: BorderRadius.circular(999)),
-                child: GestureDetector(
-                  child: const Text(
-                    'Tiếp tục',
-                    style: TextStyles.text16w7white,
-                  ),
-                  onTap: () {
-                    handleFetDataUser(
-                        response: data as Map<String, dynamic>,
-                        type: data['type']);
-                  },
-                ),
-              ),
-            ],
-          );
-        },
-      );
+      // đi lạc thì hiện cảnh báo
+      toggleShowDiaLog(
+          context: context,
+          widget: widget,
+          handleFetDataUser: handleFetDataUser,
+          data: data);
     } else {
       handleFetDataUser(
           response: data as Map<String, dynamic>, type: data['type']);
     }
   }
 
-  if (fetData.statusCode == 200) {
+  if (response != null) {
     checkIsCompany(response['data']['data']);
-  } else {
-    //Be trả về lỗi thì hiển thị message lên giao diện người dùng
-    Fluttertoast.showToast(
-        msg: response['error']['message'] ?? "Lỗi không xác định",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 2,
-        backgroundColor: AppColors.error,
-        textColor: Colors.white,
-        fontSize: 16.0);
   }
 }
 
@@ -232,8 +168,7 @@ class _ButtonAuthState extends State<ButtonAuth> {
       child: ElevatedButton(
         onPressed: () {
           if (widget.src != null && widget.isRegister != null) {
-            Navigator.pushNamed(context, widget.src!,
-                arguments: {'isRegister': widget.isRegister});
+            context.push(widget.src!, extra: widget.isRegister);
             return;
           }
           if (widget.submitRegister == null) {

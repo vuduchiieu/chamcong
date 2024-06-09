@@ -6,23 +6,14 @@ import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({super.key});
+  final bool isCompany;
+  const ForgotPassword({super.key, required this.isCompany});
 
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  bool isCompany = false;
-
-  @override
-  void didChangeDependencies() {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    isCompany = arguments['isCompany'];
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,7 +58,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InputOnchange(
+                          const InputOnchange(
                             iconLabel: Icons.person,
                             isTitle: true,
                             title: 'Tài khoản đăng nhập',
@@ -79,8 +70,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           ButtonNavigator(
                               question: 'Bạn chưa có tài khoản?',
                               pushNamed: '/register',
-                              titleArguments: 'isCompany',
-                              boolArguments: isCompany ? true : false,
+                              arguments: widget.isCompany ? true : false,
                               where: 'Đăng ký')
                         ],
                       ),
@@ -90,11 +80,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
             ),
           ),
-          ButtonIconBack(
-            where: '/login',
-            titleArguments: 'isCompany',
-            boolArguments: isCompany,
-          )
+          const ButtonIconBack()
         ],
       )),
     );

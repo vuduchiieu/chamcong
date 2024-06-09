@@ -4,23 +4,14 @@ import 'package:chamcong/modules/auth/register/screen/staff_screen.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+  final bool isCompany;
+  const RegisterScreen({super.key, required this.isCompany});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  bool isCompany = false;
-
-  @override
-  void didChangeDependencies() {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    isCompany = arguments['isCompany'];
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,14 +19,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
         body: SafeArea(
           child: Stack(
             children: [
-              isCompany
-                  ? CompanyScreen(isCompany: isCompany)
-                  : StaffScreen(isCompany: isCompany),
-              const ButtonIconBack(
-                where: '/select-auth',
-                titleArguments: 'isRegister',
-                boolArguments: true,
-              ),
+              widget.isCompany
+                  ? CompanyScreen(isCompany: widget.isCompany)
+                  : StaffScreen(isCompany: widget.isCompany),
+              const ButtonIconBack(),
             ],
           ),
         ));

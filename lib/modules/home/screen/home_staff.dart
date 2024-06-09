@@ -2,26 +2,17 @@ import 'package:chamcong/core/models/info_user_staff.dart';
 import 'package:flutter/material.dart';
 
 class HomeStaff extends StatefulWidget {
-  const HomeStaff({super.key});
+  final InfoUserStaff infoUser;
+  const HomeStaff({super.key, required this.infoUser});
 
   @override
   State<HomeStaff> createState() => _HomeStaffState();
 }
 
 class _HomeStaffState extends State<HomeStaff> {
-  InfoUserStaff? infoUser;
-
   @override
   void initState() {
     super.initState();
-  }
-
-  @override
-  void didChangeDependencies() {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    infoUser = arguments['infoUser'];
-    super.didChangeDependencies();
   }
 
   @override
@@ -29,7 +20,7 @@ class _HomeStaffState extends State<HomeStaff> {
     return Scaffold(
         appBar: AppBar(
             title: Text(
-              infoUser?.userInfo.comName ?? '',
+              widget.infoUser.userInfo.comName,
               style: const TextStyle(fontSize: 14),
             ),
             actions: null),
@@ -39,7 +30,7 @@ class _HomeStaffState extends State<HomeStaff> {
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                Text('Xin chào culi: ${infoUser?.userInfo.epName ?? ""}'),
+                Text('Xin chào culi: ${widget.infoUser.userInfo.epName}'),
                 const SizedBox(height: 20),
                 const Text('Đây là màn nhân viên')
               ])),
