@@ -5,9 +5,11 @@ import 'package:chamcong/core/theme/text_style.dart';
 import 'package:chamcong/core/widget/button_icon_back.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 class SelectAuth extends StatefulWidget {
-  const SelectAuth({super.key});
+  final bool isRegister;
+  const SelectAuth({super.key, required this.isRegister});
 
   @override
   State<SelectAuth> createState() => _SelectAuthState();
@@ -17,22 +19,15 @@ class _SelectAuthState extends State<SelectAuth> {
   ValueNotifier<bool> isRegister = ValueNotifier(false);
 
   @override
-  void didChangeDependencies() {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    isRegister.value = arguments['isRegister'];
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    isRegister.value = widget.isRegister;
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Stack(
             children: [
-              const ButtonIconBack(where: '/'),
+              const ButtonIconBack(),
               Padding(
                 padding: const EdgeInsets.all(30),
                 child: Column(
@@ -101,16 +96,8 @@ class _SelectAuthState extends State<SelectAuth> {
       required ValueNotifier<bool> isRegister}) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.pushNamed(
-            context,
-            arguments: {
-              'isCompany': isCompany,
-            },
-            isRegister.value ? '/register' : '/login');
-        // ignore: use_build_context_synchronously
-        final arguments = (ModalRoute.of(context)?.settings.arguments ??
-            <String, dynamic>{}) as Map;
-        isRegister.value = arguments['isRegister'];
+        await context.push(isRegister.value ? '/register' : '/login',
+            extra: isCompany);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),

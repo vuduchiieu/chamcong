@@ -8,7 +8,8 @@ import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
 import 'package:flutter/material.dart';
 
 class CompanyScreen extends StatefulWidget {
-  const CompanyScreen({super.key, required bool isCompany});
+  final bool isCompany;
+  const CompanyScreen({super.key, required this.isCompany});
 
   @override
   State<CompanyScreen> createState() => _CompanyScreenState();
@@ -122,6 +123,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                   formKey: _formKey,
                   textBtn: 'Tiếp tục',
                   submitRegister: true,
+                  type: widget.isCompany ? 2 : 1,
                 ),
                 const SizedBox(
                   height: 10,
@@ -129,8 +131,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
                 const ButtonNavigator(
                     question: 'Bạn đã có tài khoản?',
                     pushNamed: '/login',
-                    titleArguments: 'isCompany',
-                    boolArguments: true,
+                    arguments: true,
                     where: 'Đăng nhập')
               ],
             ),

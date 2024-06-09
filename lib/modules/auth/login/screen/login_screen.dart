@@ -8,9 +8,11 @@ import 'package:chamcong/core/widget/button_icon_back.dart';
 import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
 import 'package:chamcong/modules/auth/login/screen/border_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final bool isCompany;
+  const LoginScreen({super.key, required this.isCompany});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -18,21 +20,12 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _isPhoneEmail = true;
-  bool isCompany = false;
   final _formKey = GlobalKey<FormState>();
 
   Map<String, TextEditingController> mapControllers = {
     'account': TextEditingController(),
     'password': TextEditingController(),
   };
-
-  @override
-  void didChangeDependencies() {
-    final arguments = (ModalRoute.of(context)?.settings.arguments ??
-        <String, dynamic>{}) as Map;
-    isCompany = arguments['isCompany'];
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Flexible(
                       flex: 5,
                       child: AutoSizeText(
-                        'Đăng nhập tài khoản ${isCompany ? 'công ty' : 'nhân viên'}',
+                        'Đăng nhập tài khoản ${widget.isCompany ? 'công ty' : 'nhân viên'}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w700),
@@ -83,16 +76,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                     ),
-                    _isPhoneEmail ? screenPhoneEmail(isCompany) : screenQr()
+                    _isPhoneEmail
+                        ? screenPhoneEmail(widget.isCompany)
+                        : screenQr()
                   ],
                 ),
               ),
             ),
-            const ButtonIconBack(
-              where: '/select-auth',
-              titleArguments: 'isRegister',
-              boolArguments: false,
-            ),
+            const ButtonIconBack(),
           ],
         ),
       ),
@@ -161,9 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     valueInput: mapControllers['password'],
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.pushNamed(
-                        context, '/forgot-password',
-                        arguments: {'isCompany': isCompany}),
+                    onTap: () =>
+                        context.push('/forgot-password', extra: isCompany),
                     child: const Text('Quên mật khẩu?',
                         style: TextStyles.text16w500UnderItaPrimary),
                   ),
@@ -188,8 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ButtonNavigator(
                       question: 'Bạn chưa có tài khoản?',
                       pushNamed: '/register',
-                      titleArguments: 'isCompany',
-                      boolArguments: isCompany ? true : false,
+                      arguments: isCompany ? true : false,
                       where: 'Đăng ký')
                 ],
               ),
