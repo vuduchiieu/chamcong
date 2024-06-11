@@ -14,4 +14,6 @@ class AssetPath {
   static const String dot = '${_icon}dot.svg';
   static const String account = '${_icon}account.svg';
   static const String company = '${_icon}company.svg';
+  static const String lighting = '${_icon}lighting.svg';
+  static const String lightingSpalash = '${_icon}lighting_splash.svg';
 }

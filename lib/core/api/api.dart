@@ -5,4 +5,5 @@ class Api {
 
   static const String apiLogin = '${url}api/qlc/employee/login';
   static const String apiRegisterCompany = '${url}api/qlc/Company/register';
+  static const String apiCheckIdCompany = '${url}api/qlc/Company/isExists';
 }
