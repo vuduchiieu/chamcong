@@ -6,14 +6,17 @@ class ButtonNavigator extends StatefulWidget {
   final String question; //câu hỏi ở tiêu đề
   final String pushNamed; // đi đâu
   final bool arguments; //value của arguments
+  final String titleArguments;
   final String where; //đi đâu ở tiêu đề
 
-  const ButtonNavigator(
-      {super.key,
-      required this.question,
-      required this.pushNamed,
-      required this.arguments,
-      required this.where});
+  const ButtonNavigator({
+    super.key,
+    required this.question,
+    required this.pushNamed,
+    required this.arguments,
+    required this.titleArguments,
+    required this.where,
+  });
 
   @override
   State<ButtonNavigator> createState() => _ButtonNavigatorState();
@@ -32,7 +35,10 @@ class _ButtonNavigatorState extends State<ButtonNavigator> {
         ),
         GestureDetector(
             onTap: () {
-              context.push(widget.pushNamed, extra: widget.arguments);
+              context.push(widget.pushNamed, extra: {
+                widget.titleArguments: widget.arguments,
+                'isStaffById': false
+              });
             },
             child: Text(widget.where, style: TextStyles.text18w7Primary))
       ],

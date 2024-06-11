@@ -1,11 +1,14 @@
 import 'package:chamcong/core/api/api.dart';
+import 'package:chamcong/core/widget/button_auth/handle_login.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class AuthenticationOtp extends StatefulWidget {
   final Map<String, dynamic> argument;
-  const AuthenticationOtp({super.key, required this.argument});
+  const AuthenticationOtp({
+    super.key,
+    required this.argument,
+  });
 
   @override
   State<AuthenticationOtp> createState() => _AuthenticationOtpState();
@@ -21,9 +24,14 @@ class _AuthenticationOtpState extends State<AuthenticationOtp> {
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
-          onNavigationRequest: (NavigationRequest request) {
-            if (request.url == 'https://chat365.timviec365.vn/') {
-              context.pop(true);
+          onNavigationRequest: (NavigationRequest request) async {
+            if (request.url.contains(RegExp(r'chat365.timviec365.vn'))) {
+              await handleLogin(
+                  widget: widget.argument['widget'],
+                  context: context,
+                  callByRegister: true,
+                  accountValue: widget.argument['account'],
+                  passwordValue: widget.argument['password']);
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;

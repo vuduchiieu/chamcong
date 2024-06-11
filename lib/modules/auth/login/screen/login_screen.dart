@@ -2,7 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
-import 'package:chamcong/core/widget/button_auth.dart';
+import 'package:chamcong/core/widget/button_auth/button_auth.dart';
 import 'package:chamcong/core/widget/button_navigator.dart';
 import 'package:chamcong/core/widget/button_icon_back.dart';
 import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
-  final bool isCompany;
-  const LoginScreen({super.key, required this.isCompany});
+  final Map<String, dynamic> argument;
+  const LoginScreen({super.key, required this.argument});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Flexible(
                       flex: 5,
                       child: AutoSizeText(
-                        'Đăng nhập tài khoản ${widget.isCompany ? 'công ty' : 'nhân viên'}',
+                        'Đăng nhập tài khoản ${widget.argument['isCompany'] ? 'công ty' : 'nhân viên'}',
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                             fontSize: 20, fontWeight: FontWeight.w700),
@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     _isPhoneEmail
-                        ? screenPhoneEmail(widget.isCompany)
+                        ? screenPhoneEmail(widget.argument['isCompany'])
                         : screenQr()
                   ],
                 ),
@@ -139,12 +139,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   InputOnchange(
+                    isSelect: false,
                     iconLabel: Icons.person,
                     placeholder: 'Nhập số điện thoại/ email',
                     isTitle: false,
                     valueInput: mapControllers['account'],
                   ),
                   InputOnchange(
+                    isSelect: false,
                     iconLabel: Icons.lock,
                     placeholder: 'Nhập mật khẩu',
                     isPassword: true,
@@ -177,6 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   ButtonNavigator(
                       question: 'Bạn chưa có tài khoản?',
+                      titleArguments: 'isCompany',
                       pushNamed: '/register',
                       arguments: isCompany ? true : false,
                       where: 'Đăng ký')

@@ -1,11 +1,11 @@
 import 'package:chamcong/core/widget/button_icon_back.dart';
-import 'package:chamcong/modules/auth/register/screen/company_screen.dart';
-import 'package:chamcong/modules/auth/register/screen/staff_screen.dart';
+import 'package:chamcong/modules/auth/register/screen/company/company_screen.dart';
+import 'package:chamcong/modules/auth/register/screen/staff/staff_screen.dart';
 import 'package:flutter/material.dart';
 
 class RegisterScreen extends StatefulWidget {
-  final bool isCompany;
-  const RegisterScreen({super.key, required this.isCompany});
+  final Map<String, dynamic> argument;
+  const RegisterScreen({super.key, required this.argument});
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -19,9 +19,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
         body: SafeArea(
           child: Stack(
             children: [
-              widget.isCompany
-                  ? CompanyScreen(isCompany: widget.isCompany)
-                  : StaffScreen(isCompany: widget.isCompany),
+              widget.argument['isCompany']
+                  ? CompanyScreen(
+                      isCompany: widget.argument['isCompany'],
+                      isStaffById: widget.argument['isStaffById'],
+                      infoCompany: widget.argument['infoCompany'],
+                    )
+                  : StaffScreen(isCompany: widget.argument['isCompany']),
               const ButtonIconBack(),
             ],
           ),
