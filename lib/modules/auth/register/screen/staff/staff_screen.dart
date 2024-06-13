@@ -2,8 +2,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/text_style.dart';
 import 'package:chamcong/core/widget/button_auth/button_auth.dart';
+import 'package:chamcong/core/widget/button_auth/handle_getInfo_company.dart';
 import 'package:chamcong/core/widget/button_navigator.dart';
-import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
+import 'package:chamcong/core/widget/input_onchange.dart';
 import 'package:flutter/material.dart';
 
 class StaffScreen extends StatefulWidget {
@@ -72,9 +73,13 @@ class _StaffScreenState extends State<StaffScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ButtonAuth(
-                          textBtn: 'Xác thực mã công ty',
-                          isRegisterByIdCompany: true,
-                          idCompanyController: _textEditingController),
+                        textBtn: 'Xác thực mã công ty',
+                        voidCallback: () {
+                          handleGetInfoCompanyById(
+                              context: context,
+                              idCompany: _textEditingController.text);
+                        },
+                      ),
                       Flexible(
                           child: ButtonNavigator(
                               question: 'Bạn đã có tài khoản?',

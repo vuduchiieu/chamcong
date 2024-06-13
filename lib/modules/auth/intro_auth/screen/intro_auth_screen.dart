@@ -1,5 +1,5 @@
 import 'package:chamcong/core/constants/asset_path.dart';
-import 'package:chamcong/core/models/on_intro_item.dart';
+import 'package:chamcong/models/on_intro_item.dart';
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
 import 'package:chamcong/core/widget/button_auth/button_auth.dart';

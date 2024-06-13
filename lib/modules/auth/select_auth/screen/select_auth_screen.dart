@@ -97,7 +97,7 @@ class _SelectAuthState extends State<SelectAuth> {
     return GestureDetector(
       onTap: () async {
         await context.push(isRegister.value ? '/register' : '/login',
-            extra: {'isCompany': isCompany, 'isStaffById': false});
+            extra: {'isCompany': isCompany, 'isRegisterStaffById': false});
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20),

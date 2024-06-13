@@ -1,9 +1,9 @@
-import 'package:chamcong/core/models/info_user_company.dart';
-import 'package:chamcong/core/models/info_user_staff.dart';
+import 'package:chamcong/models/info_user_company.dart';
+import 'package:chamcong/models/info_user_staff.dart';
 import 'package:chamcong/modules/auth/login/forgot_password/screen/forgot_password.dart';
 import 'package:chamcong/modules/auth/intro_auth/screen/intro_auth_screen.dart';
 import 'package:chamcong/modules/auth/login/screen/login_screen.dart';
-import 'package:chamcong/modules/auth/register/screen/company/authentication_otp.dart';
+import 'package:chamcong/core/authen_otp/authentication_otp.dart';
 import 'package:chamcong/modules/auth/register/screen/register_screen.dart';
 import 'package:chamcong/modules/auth/select_auth/screen/select_auth_screen.dart';
 import 'package:chamcong/modules/home/screen/homeCompany.dart';

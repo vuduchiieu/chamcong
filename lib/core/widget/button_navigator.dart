@@ -6,7 +6,7 @@ class ButtonNavigator extends StatefulWidget {
   final String question; //câu hỏi ở tiêu đề
   final String pushNamed; // đi đâu
   final bool arguments; //value của arguments
-  final String titleArguments;
+  final String titleArguments; //key của arguments
   final String where; //đi đâu ở tiêu đề
 
   const ButtonNavigator({
@@ -37,7 +37,7 @@ class _ButtonNavigatorState extends State<ButtonNavigator> {
             onTap: () {
               context.push(widget.pushNamed, extra: {
                 widget.titleArguments: widget.arguments,
-                'isStaffById': false
+                'isRegisterStaffById': false
               });
             },
             child: Text(widget.where, style: TextStyles.text18w7Primary))

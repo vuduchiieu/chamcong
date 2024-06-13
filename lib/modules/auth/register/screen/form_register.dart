@@ -2,19 +2,20 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/text_style.dart';
 import 'package:chamcong/core/widget/button_auth/button_auth.dart';
+import 'package:chamcong/core/widget/button_auth/handle_register.dart';
 import 'package:chamcong/core/widget/button_navigator.dart';
-import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
+import 'package:chamcong/core/widget/input_onchange.dart';
 
 import 'package:flutter/material.dart';
 
 class CompanyScreen extends StatefulWidget {
   final bool isCompany;
-  final bool isStaffById;
+  final bool isRegisterStaffById;
   final Map<String, dynamic>? infoCompany;
   const CompanyScreen(
       {super.key,
       required this.isCompany,
-      required this.isStaffById,
+      required this.isRegisterStaffById,
       this.infoCompany});
 
   @override
@@ -31,7 +32,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
     mapControllers = {
       'account': TextEditingController(),
       'companyName': TextEditingController(
-          text: widget.isStaffById
+          text: widget.isRegisterStaffById
               ? widget.infoCompany!['detail_company']['com_name']
               : ''),
       'phone': TextEditingController(),
@@ -41,7 +42,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
       'username': TextEditingController(),
       'sex': TextEditingController(),
       'birthday': TextEditingController(),
-      'academic': TextEditingController(),
+      'education': TextEditingController(),
       'marriage': TextEditingController(),
       'experience': TextEditingController(),
       'position': TextEditingController(),
@@ -62,7 +63,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: AutoSizeText(
-              widget.isStaffById
+              widget.isRegisterStaffById
                   ? 'Điền thông tin tài khoản'
                   : 'Đăng ký tài khoản công ty',
               textAlign: TextAlign.center,
@@ -81,16 +82,38 @@ class _CompanyScreenState extends State<CompanyScreen> {
             child: Column(
               children: [
                 ButtonAuth(
-                  mapControllers: mapControllers,
                   formKey: _formKey,
                   textBtn: 'Tiếp tục',
-                  submitRegister: true,
-                  type: widget.isCompany ? 2 : 1,
+                  voidCallback: () {
+                    handleRegister(
+                        formKey: _formKey,
+                        context: context,
+                        isRegisterStaffById: widget.isRegisterStaffById,
+                        account: mapControllers['account']?.text ?? '',
+                        address: mapControllers['address']?.text ?? '',
+                        companyName: mapControllers['companyName']?.text ?? '',
+                        password: mapControllers['password']?.text ?? '',
+                        phone: mapControllers['phone']?.text ?? '',
+                        type: widget.isCompany ? 2 : 1,
+                        // phần này của nhân viên
+                        listOrganize:
+                            widget.infoCompany?['list_organizeDetail'],
+                        username: mapControllers['username']?.text ?? '',
+                        sex: mapControllers['sex']?.text ?? '',
+                        birthday: mapControllers['birthday']?.text ?? '',
+                        education: mapControllers['education']?.text ?? '',
+                        marriage: mapControllers['marriage']?.text ?? '',
+                        experience: mapControllers['experience']?.text ?? '',
+                        position: mapControllers['position']?.text ?? '',
+                        department: mapControllers['department']?.text ?? '',
+                        idCompany: widget.infoCompany!['detail_company']
+                            ['com_id']);
+                  },
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                if (!widget.isStaffById)
+                if (!widget.isRegisterStaffById)
                   ButtonNavigator(
                       titleArguments: 'isCompany',
                       arguments: widget.isCompany ? true : false,
@@ -106,41 +129,35 @@ class _CompanyScreenState extends State<CompanyScreen> {
   }
 
   Column input() {
-    List<Map<String, dynamic>> listPositions = [];
-    if (widget.infoCompany?['list_position'] is List &&
-        (widget.infoCompany?['list_position'] as List).isNotEmpty) {
-      listPositions = widget.infoCompany!['list_positions'];
-    }
+    List listPositions = widget.infoCompany?['list_positions'] ?? [];
 
-    List<Map<String, dynamic>> listOrganizeDetail = [];
-    if (widget.infoCompany?['list_organizeDetail'] is List &&
-        (widget.infoCompany!['list_organizeDetail'] as List).isNotEmpty) {
-      listOrganizeDetail = widget.infoCompany!['list_organizeDetail'];
-    }
+    List listOrganizeDetail = widget.infoCompany?['list_organizeDetail'] ?? [];
 
-    List<String> sex = ['Nam', 'Nữ', 'Khác'];
-    List<String> academic = [
-      'Trên đại học',
-      'Đại học',
-      'Cao đẳng',
-      'Trung cấp',
-      'Đào tạo nghề',
-      'Trung học phổ thông',
-      'Trung học cơ sở',
-      'Tiểu học'
-    ];
-    List<String> marriage = ['Độc thân', 'Đã kết hôn'];
+    Map<int, String> sex = {1: 'Nam', 2: 'Nữ', 3: 'Khác'};
 
-    List<String> experience = [
-      'Chưa có kinh nghiệm',
-      'Dưới 1 năm',
-      '1 năm',
-      '2 năm',
-      '3 năm',
-      '4 năm',
-      '5 năm',
-      'Trên 5 năm'
-    ];
+    Map<int, String> education = {
+      1: 'Trên đại học',
+      2: 'Đại học',
+      3: 'Cao đẳng',
+      4: 'Trung cấp',
+      5: 'Đào tạo nghề',
+      6: 'Trung học phổ thông',
+      7: 'Trung học cơ sở',
+      8: 'Tiểu học'
+    };
+
+    Map<int, String> marriage = {1: 'Độc thân', 2: 'Đã kết hôn'};
+
+    Map<int, String> experience = {
+      1: 'Chưa có kinh nghiệm',
+      2: 'Dưới 1 năm',
+      3: '1 năm',
+      4: '2 năm',
+      5: '3 năm',
+      6: '4 năm',
+      7: '5 năm',
+      8: 'Trên 5 năm'
+    };
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -158,7 +175,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
         ),
         InputOnchange(
           isSelect: false,
-          change: widget.isStaffById ? false : true,
+          change: widget.isRegisterStaffById ? false : true,
           title: 'Tên công ty',
           isTitle: true,
           iconLabel: Icons.apartment,
@@ -167,7 +184,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
           type: 'company',
           formKey: _formKey,
         ),
-        if (widget.isStaffById)
+        if (widget.isRegisterStaffById)
           InputOnchange(
             isSelect: false,
             title: 'Tên người dùng',
@@ -213,7 +230,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
         ),
         InputOnchange(
           isSelect: false,
-          lines: widget.isStaffById ? 1 : 3,
+          lines: widget.isRegisterStaffById ? 1 : 3,
           title: 'Địa chỉ',
           isTitle: true,
           iconLabel: Icons.location_on,
@@ -223,7 +240,7 @@ class _CompanyScreenState extends State<CompanyScreen> {
           formKey: _formKey,
         ),
         //  mấy cái dưới này là input cho đăng ký nhân viên
-        if (widget.isStaffById)
+        if (widget.isRegisterStaffById)
           InputOnchange(
             isSelect: true,
             title: 'Giới tính',
@@ -234,37 +251,40 @@ class _CompanyScreenState extends State<CompanyScreen> {
             placeholder: 'Chọn giới tính',
             formKey: _formKey,
             entryMenu: List.generate(
-              sex.length,
-              (index) =>
-                  DropdownMenuEntry(value: sex[index], label: sex[index]),
+              sex.values.length,
+              (index) => DropdownMenuItem(
+                  value: sex.keys.elementAt(index).toString(),
+                  child: Text(sex.values.elementAt(index))),
             ),
           ),
-        if (widget.isStaffById)
+        if (widget.isRegisterStaffById)
           InputOnchange(
             isSelect: true,
             title: 'Ngày sinh',
             isTitle: true,
             iconLabel: Icons.calendar_month,
             valueInput: mapControllers['birthday'],
+            placeholder: 'Chọn ngày sinh',
             type: 'birthday',
             formKey: _formKey,
             isBirthday: true,
           ),
-        if (widget.isStaffById)
+        if (widget.isRegisterStaffById)
           InputOnchange(
               isSelect: true,
               title: 'Trình độ học vấn',
               isTitle: true,
               iconLabel: Icons.school,
-              valueInput: mapControllers['academic'],
-              type: 'academic',
+              valueInput: mapControllers['education'],
+              type: 'education',
               placeholder: 'Chọn trình độ học vấn',
               formKey: _formKey,
               entryMenu: List.generate(
-                  academic.length,
-                  (index) => DropdownMenuEntry(
-                      value: academic[index], label: academic[index]))),
-        if (widget.isStaffById)
+                  education.values.length,
+                  (index) => DropdownMenuItem(
+                      value: education.keys.elementAt(index).toString(),
+                      child: Text(education.values.elementAt(index))))),
+        if (widget.isRegisterStaffById)
           InputOnchange(
               isSelect: true,
               title: 'Tình trạng hôn nhân',
@@ -275,10 +295,11 @@ class _CompanyScreenState extends State<CompanyScreen> {
               type: 'marriage',
               formKey: _formKey,
               entryMenu: List.generate(
-                  marriage.length,
-                  (index) => DropdownMenuEntry(
-                      value: marriage[index], label: marriage[index]))),
-        if (widget.isStaffById)
+                  marriage.values.length,
+                  (index) => DropdownMenuItem(
+                      value: marriage.keys.elementAt(index).toString(),
+                      child: Text(marriage.values.elementAt(index))))),
+        if (widget.isRegisterStaffById)
           InputOnchange(
               isSelect: true,
               title: 'Kinh nghiệm làm việc',
@@ -289,11 +310,13 @@ class _CompanyScreenState extends State<CompanyScreen> {
               type: 'experience',
               formKey: _formKey,
               entryMenu: List.generate(
-                  experience.length,
-                  (index) => DropdownMenuEntry(
-                      value: experience[index], label: experience[index]))),
+                  experience.values.length,
+                  (index) => DropdownMenuItem(
+                        value: experience.keys.elementAt(index).toString(),
+                        child: Text(experience.values.elementAt(index)),
+                      ))),
 
-        if (widget.isStaffById)
+        if (widget.isRegisterStaffById)
           InputOnchange(
             isSelect: true,
             title: 'Chức vụ',
@@ -304,12 +327,12 @@ class _CompanyScreenState extends State<CompanyScreen> {
             type: 'position',
             formKey: _formKey,
             entryMenu: listPositions.map((position) {
-              return DropdownMenuEntry<String>(
-                  value: (position['positionName']),
-                  label: position['positionName']);
+              return DropdownMenuItem<String>(
+                  value: (position['position_id'].toString()),
+                  child: Text(position['positionName']));
             }).toList(),
           ),
-        if (widget.isStaffById)
+        if (widget.isRegisterStaffById)
           InputOnchange(
             isSelect: true,
             title: 'Phòng ban',
@@ -320,9 +343,9 @@ class _CompanyScreenState extends State<CompanyScreen> {
             type: 'department',
             formKey: _formKey,
             entryMenu: listOrganizeDetail.map((organizeDetai) {
-              return DropdownMenuEntry<String>(
-                  value: (organizeDetai['organizeDetailName']),
-                  label: organizeDetai['organizeDetailName']);
+              return DropdownMenuItem<String>(
+                  value: (organizeDetai['organizeDetailId'].toString()),
+                  child: Text(organizeDetai['organizeDetailName']));
             }).toList(),
           ),
       ],

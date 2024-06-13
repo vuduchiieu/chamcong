@@ -1,38 +1,22 @@
 import 'package:chamcong/core/api/api.dart';
 import 'package:chamcong/core/constants/handle_api.dart';
 import 'package:chamcong/core/constants/show_dia_log.dart';
-import 'package:chamcong/core/models/info_user_company.dart';
-import 'package:chamcong/core/models/info_user_staff.dart';
-import 'package:chamcong/core/widget/button_auth/button_auth.dart';
+import 'package:chamcong/models/info_user_company.dart';
+import 'package:chamcong/models/info_user_staff.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 Future<void> handleLogin({
-  required ButtonAuth widget,
+  required int type,
   required BuildContext context,
-  bool? callByRegister,
-  String? accountValue,
-  String? passwordValue,
+  bool? callByRegister, // gọi ở phần đăng ký, không cần check đi lạc
+  required String account,
+  required String password,
 }) async {
-  String account;
-  String password;
-
-  if (callByRegister != null && callByRegister == true) {
-    account = accountValue ?? '';
-    password = passwordValue ?? '';
-  } else {
-    account = widget.mapControllers?['account'] != null
-        ? widget.mapControllers!['account']!.text
-        : '';
-    password = widget.mapControllers?['password'] != null
-        ? widget.mapControllers!['password']!.text
-        : '';
-  }
-
   final response = await handlePostApi(url: Api.apiLogin, body: {
     'account': account,
     'password': password,
-    'type': widget.type,
+    'type': type,
   });
 
   // điều hướng(cho ra ngoài đỡ báo xanh)
@@ -61,11 +45,11 @@ Future<void> handleLogin({
       handleFetDataUser(data: data as Map<String, dynamic>, type: data['type']);
       return;
     }
-    if (widget.type != data['type']) {
+    if (type != data['type']) {
       // đi lạc thì hiện cảnh báo
       toggleShowDiaLog(
           context: context,
-          widget: widget,
+          type: type,
           handleFetDataUser: handleFetDataUser,
           data: data);
     } else {

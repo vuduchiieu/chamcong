@@ -1,4 +1,4 @@
-import 'package:chamcong/core/models/info_user_company.dart';
+import 'package:chamcong/models/info_user_company.dart';
 import 'package:flutter/material.dart';
 
 class HomeCompany extends StatefulWidget {
