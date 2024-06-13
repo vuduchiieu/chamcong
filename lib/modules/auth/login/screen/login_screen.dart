@@ -3,9 +3,10 @@ import 'package:chamcong/core/constants/asset_path.dart';
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
 import 'package:chamcong/core/widget/button_auth/button_auth.dart';
+import 'package:chamcong/core/widget/button_auth/handle_login.dart';
 import 'package:chamcong/core/widget/button_navigator.dart';
 import 'package:chamcong/core/widget/button_icon_back.dart';
-import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
+import 'package:chamcong/core/widget/input_onchange.dart';
 import 'package:chamcong/modules/auth/login/screen/border_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -171,11 +172,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   ButtonAuth(
-                    mapControllers: mapControllers,
                     formKey: _formKey,
                     textBtn: 'Đăng nhập',
-                    submitRegister: false,
-                    type: isCompany ? 1 : 2,
+                    voidCallback: () {
+                      handleLogin(
+                          context: context,
+                          type: isCompany ? 1 : 2,
+                          account: mapControllers['account']?.text ?? '',
+                          password: mapControllers['password']?.text ?? '');
+                    },
                   ),
                   ButtonNavigator(
                       question: 'Bạn chưa có tài khoản?',

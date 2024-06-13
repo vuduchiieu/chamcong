@@ -27,11 +27,11 @@ class _AuthenticationOtpState extends State<AuthenticationOtp> {
           onNavigationRequest: (NavigationRequest request) async {
             if (request.url.contains(RegExp(r'chat365.timviec365.vn'))) {
               await handleLogin(
-                  widget: widget.argument['widget'],
+                  type: 2,
                   context: context,
                   callByRegister: true,
-                  accountValue: widget.argument['account'],
-                  passwordValue: widget.argument['password']);
+                  account: widget.argument['account'],
+                  password: widget.argument['password']);
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
@@ -39,6 +39,7 @@ class _AuthenticationOtpState extends State<AuthenticationOtp> {
         ),
       )
       ..loadRequest(Uri.parse(
+        // 'https://hungha365.com/xac-thuc-ma-otp-mk.html?account=${widget.argument['account']}&type=${widget.argument['type']}'
         '${Api.urlAuthenOtp}/${widget.argument['account']}/${widget.argument['type']}',
       ));
 

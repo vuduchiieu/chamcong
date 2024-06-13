@@ -1,11 +1,10 @@
 import 'package:chamcong/core/theme/colors.dart';
 import 'package:chamcong/core/theme/text_style.dart';
-import 'package:chamcong/core/widget/button_auth/button_auth.dart';
 import 'package:flutter/material.dart';
 
 toggleShowDiaLog(
     {required BuildContext context,
-    required ButtonAuth widget,
+    required int type,
     required handleFetDataUser,
     required data}) {
   showDialog(
@@ -24,7 +23,7 @@ toggleShowDiaLog(
               text: 'Tài khoản bạn đang đăng nhập là tài khoản ',
             ),
             TextSpan(
-              text: "${widget.type == 1 ? 'công ty' : 'nhân viên'}. ",
+              text: "${type == 1 ? 'công ty' : 'nhân viên'}. ",
               style: TextStyles.text16w500Primary,
             ),
             const TextSpan(

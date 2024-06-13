@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class InputOnchange extends StatefulWidget {
-  final String? placeholder;
+  final String? placeholder; //text
   final bool? isPassword;
   final String? title;
   final int? lines;
@@ -15,7 +15,7 @@ class InputOnchange extends StatefulWidget {
   final bool? change;
   final bool isSelect;
   final bool? isBirthday;
-  final List<DropdownMenuEntry<String>>? entryMenu;
+  final List<DropdownMenuItem<String>>? entryMenu;
   final TextEditingController? valueInput;
   final GlobalKey<FormState>? formKey;
 
@@ -96,6 +96,30 @@ class _InputOnchangeState extends State<InputOnchange> {
         if (value.isEmpty) {
           return 'Vui lòng nhập địa chỉ';
         }
+      case 'username':
+        if (value.isEmpty) {
+          return 'Vui lòng nhập họ và tên';
+        }
+      case 'sex':
+        if (value.isEmpty) {
+          return 'Vui lòng lựa chọn giới tinh';
+        }
+      case 'birthday':
+        if (value.isEmpty) {
+          return 'Vui lòng lựa chọn ngày sinh';
+        }
+      case 'education':
+        if (value.isEmpty) {
+          return 'Vui lòng lựa chọn trình độ học vấn';
+        }
+      case 'marriage':
+        if (value.isEmpty) {
+          return 'Vui lòng lựa chọn tình trạng hôn nhân';
+        }
+      case 'experience':
+        if (value.isEmpty) {
+          return 'Vui lòng lựa chọn kinh nghiệm làm việc';
+        }
       default:
         null;
     }
@@ -129,54 +153,89 @@ class _InputOnchangeState extends State<InputOnchange> {
               ),
             ),
           widget.isBirthday != null
+              // lịch
               ? GestureDetector(
                   onTap: () async {
                     DateTime? newDateTime = await showDatePicker(
                       context: context,
                       locale: const Locale('vi', 'VN'),
                       initialDate: widget.valueInput?.text != ''
-                          ? DateFormat('dd-MM-yyyy').parse('11/01/2005')
+                          ? DateFormat('dd-MM-yyyy')
+                              .parse(widget.valueInput!.text)
                           : DateTime.now(),
                       firstDate: DateTime(1925),
                       lastDate: DateTime.now(),
                     );
-                    if (newDateTime != null) {
-                      setState(() => dateTime = newDateTime);
+
+                    if (widget.valueInput?.text != null) {
+                      widget.valueInput!.text = newDateTime != null
+                          ? DateFormat("dd-MM-yyyy")
+                              .format(newDateTime)
+                              .toString()
+                          : DateFormat("dd-MM-yyyy").format(DateTime.now());
                     }
                   },
                   child: TextFormField(
+                    controller: widget.valueInput,
                     enabled: false,
-                    style: const TextStyle(
-                        fontSize: 16, overflow: TextOverflow.ellipsis),
+                    style: TextStyles.text16w4black,
                     decoration: InputDecoration(
-                        prefixIcon: Icon(widget.iconLabel),
-                        prefixIconColor: MaterialStateColor.resolveWith(
-                            (states) => states.contains(MaterialState.focused)
-                                ? AppColors.primary
-                                : AppColors.gray999),
-                        disabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: AppColors.gray999),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        hintText: DateFormat("dd-MM-yyyy")
-                            .format(dateTime)
-                            .toString(),
-                        hintStyle: (TextStyles.text16w4Gray)),
+                      hintText: widget.placeholder,
+                      hintStyle: (TextStyles.text16w4Gray),
+                      prefixIcon: Icon(widget.iconLabel),
+                      prefixIconColor: MaterialStateColor.resolveWith(
+                          (states) => states.contains(MaterialState.focused)
+                              ? AppColors.primary
+                              : AppColors.gray999),
+                      disabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.gray999),
+                          borderRadius: BorderRadius.all(Radius.circular(20))),
+                    ),
                   ),
                 )
               : widget.isSelect
-                  ? DropdownMenu<String>(
-                      width: MediaQuery.of(context).size.width * 0.90,
-                      leadingIcon: Icon(widget.iconLabel),
-                      hintText: widget.placeholder,
-                      inputDecorationTheme: const InputDecorationTheme(
-                        suffixIconColor: AppColors.primary,
-                        border: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        hintStyle: TextStyles.text16w4Gray,
-                      ),
-                      dropdownMenuEntries: widget.entryMenu ?? [])
+                  // select
+                  ? DropdownButtonFormField<String>(
+                      items: widget.entryMenu,
+                      onChanged: (value) {
+                        if (widget.valueInput != null && value != null) {
+                          // con lợn này không có controller nên chúng tôi tự tạo ra
+                          widget.valueInput!.value =
+                              TextEditingValue(text: value);
+                        }
+                        if (widget.formKey?.currentState != null) {
+                          widget.formKey!.currentState!.validate();
+                        }
+                      },
+                      validator: (value) {
+                        if (widget.valueInput?.value.text.isNotEmpty != null) {
+                          return validate(widget.valueInput!.value.text);
+                        } else {
+                          return null;
+                        }
+                      },
+                      style: TextStyles.text16w4black,
+                      decoration: InputDecoration(
+                          suffixIconColor: MaterialStateColor.resolveWith(
+                              (states) => states.contains(MaterialState.focused)
+                                  ? AppColors.primary
+                                  : AppColors.gray999),
+                          focusedBorder: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
+                              borderSide: BorderSide(color: AppColors.primary)),
+                          prefixIcon: Icon(widget.iconLabel),
+                          prefixIconColor: MaterialStateColor.resolveWith(
+                              (states) => states.contains(MaterialState.focused)
+                                  ? AppColors.primary
+                                  : AppColors.gray999),
+                          border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20))),
+                          hintText: widget.placeholder,
+                          hintStyle: (TextStyles.text16w4Gray)),
+                    )
+                  // những input còn lại
                   : TextFormField(
                       enabled: widget.change ?? true,
                       onChanged: (value) {
@@ -196,8 +255,7 @@ class _InputOnchangeState extends State<InputOnchange> {
                       obscureText: widget.isPassword ?? false
                           ? _obscuraText
                           : !_obscuraText,
-                      style: const TextStyle(
-                          fontSize: 16, overflow: TextOverflow.ellipsis),
+                      style: TextStyles.text16w4black,
                       decoration: InputDecoration(
                           suffixIcon: (widget.isPassword ?? false)
                               ? GestureDetector(

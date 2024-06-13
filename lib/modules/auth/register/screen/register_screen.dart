@@ -1,5 +1,5 @@
 import 'package:chamcong/core/widget/button_icon_back.dart';
-import 'package:chamcong/modules/auth/register/screen/company/company_screen.dart';
+import 'package:chamcong/modules/auth/register/screen/form_register.dart';
 import 'package:chamcong/modules/auth/register/screen/staff/staff_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +22,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
               widget.argument['isCompany']
                   ? CompanyScreen(
                       isCompany: widget.argument['isCompany'],
-                      isStaffById: widget.argument['isStaffById'],
+                      isRegisterStaffById:
+                          widget.argument['isRegisterStaffById'],
                       infoCompany: widget.argument['infoCompany'],
                     )
                   : StaffScreen(isCompany: widget.argument['isCompany']),

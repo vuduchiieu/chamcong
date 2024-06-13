@@ -2,7 +2,7 @@ import 'package:chamcong/core/theme/text_style.dart';
 import 'package:chamcong/core/widget/button_auth/button_auth.dart';
 import 'package:chamcong/core/widget/button_navigator.dart';
 import 'package:chamcong/core/widget/button_icon_back.dart';
-import 'package:chamcong/core/widget/input_onchange/input_onchange.dart';
+import 'package:chamcong/core/widget/input_onchange.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatefulWidget {
@@ -67,7 +67,8 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                           placeholder: 'Nhập số điện thoại/ email',
                         ),
                         const ButtonAuth(
-                            textBtn: 'Nhập mã xác thực', submitRegister: null),
+                          textBtn: 'Nhập mã xác thực',
+                        ),
                         ButtonNavigator(
                             question: 'Bạn chưa có tài khoản?',
                             pushNamed: '/register',

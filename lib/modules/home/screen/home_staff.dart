@@ -1,4 +1,4 @@
-import 'package:chamcong/core/models/info_user_staff.dart';
+import 'package:chamcong/models/info_user_staff.dart';
 import 'package:flutter/material.dart';
 
 class HomeStaff extends StatefulWidget {
